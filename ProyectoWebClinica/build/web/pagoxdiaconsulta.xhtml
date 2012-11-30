@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title><h:outputText  value="#{msg.pagos}" /></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+            <h:outputStylesheet library="css" name="estilo.css"/>
+    </h:head>
+    <h:body>
+        <ui:composition template="/WEB-INF/facelets/templates/TemplatePagina.xhtml">
+            <ui:define name="content">
+                    <h:outputText value="Reportes de Pagos Consultas por Fehas"  styleClass="texto1"/> <br />
+                    <p:panel rendered="#{bUsuario.usuario_a.tipo_user eq 1 or bUsuario.usuario_a.cod_tipo_personal eq 5}">
+                        <h:form id="form_reporte">
+                            <p:commandButton style="float: right" value="Volver a Menu Pagos" id="volver" action="pago.jsf"/>
+                            <p:panel id="listar_pagoshoy" header="Listando Los pagos por Consultas" widgetVar="listar_pagoshoy" toggleable="true">
+                                <center>       
+                                    <p:dataTable id="d1" var="bol" value="#{bBoleta.cargarPagoConsultaFecha}" paginator="true" rows="4"                   
+                                                        emptyMessage="No se encontraron Pagos de Consultas" style="width: 900px">
+                                                <p:column headerText="Tipo Boleta">    
+                                                    <h:outputText value="#{bol.tipo}" />
+                                                </p:column>
+                                                <p:column headerText="Cantidad">    
+                                                    <h:outputText value="#{bol.boleta}" />
+                                                </p:column>
+                                                <p:column headerText="N° Consultas">    
+                                                    <h:outputText value="#{bol.examen}" />
+                                                </p:column>
+                                                <p:column headerText="Monto Recaudado">    
+                                                    <h:outputText value="#{bol.monto}" />
+                                                </p:column>
+                                                <p:column headerText="Dia">    
+                                                    <h:outputText value="#{bol.fecha}" />
+                                                </p:column>
+                                  </p:dataTable>
+                                     </center> 
+                                  <p:commandButton   value="Ver Estadisticas" id="search" update="form_reporte" onclick="grafico.show();"/>
+                             
+                                    <p:panel id="grafico" header="Estadisticas de Ingresos por Consultas"  visible="true" widgetVar="grafico" closable="true">
+                           
+                                    <p:panel id="reportPie" header="Graficos de Ingresos por Consultas"  
+                                visible="true" widgetVar="reportPie" toggleable="true">
+                        <h:panelGroup>
+                            <p:pieChart id="sample" value="#{bBoleta.createPieModelPagoConsultaFecha()}" 
+                                        title="Monto de Boletas Por Serie" 
+                                        legendPosition="no" fill="true" showDataLabels="true"   
+                                        style="width:500px;height:300px;text-align: center" sliceMargin="5" diameter="200" 
+                                        widgetVar="pie"/>
+                                    <p:commandButton type="button" value="#{msg.exptorta}" icon="ui-icon-extlink" onclick="exportPie()" />
+                                    <p:dialog widgetVar="dlg2" showEffect="fade"  header="#{msg.gimgtorta}">  
+                                        <p:outputPanel id="outputpie" layout="block" style="width:600px;height:300px"/>  
+                                    </p:dialog>
+                        </h:panelGroup>
+                    </p:panel>
+                    <p:panel id="reportBar2" header="Listando El Reporte de los Ingresos"  
+                                visible="true" widgetVar="reportBar2" toggleable="true">
+                         <h:panelGroup>
+                             <p:barChart id="basic" value="#{bBoleta.createBarModelPagoConsultaFecha()}" legendPosition="ne"  
+                                        orientation="vertical" title="Comparacion entre Series de Boletas" min="0" max="100" style="width:600px;text-align: center" 
+                                        animate="true" zoom="true" widgetVar="barraec1" />  
+                                    <p:commandButton type="button" value="#{msg.expbarra}" icon="ui-icon-extlink" onclick="exportChart2()"/> 
+                                    <p:dialog widgetVar="dlg" showEffect="fade"  header="#{msg.gimgbarra}">  
+                                        <p:outputPanel id="output" layout="block" style="width:600px;height:300px"/>  
+                                    </p:dialog>
+                        </h:panelGroup>
+                        
+                    </p:panel>
+                     <SCRIPT LANGUAGE="JavaScript"> 
+                        function exportChart(){  
+                        $('#output').empty().append(barraec1.exportAsImage());  
+                        dlg.show();  
+                        }
+                        function exportPie(){  
+                        $('#outputpie').empty().append(pie.exportAsImage());  
+                        dlg2.show();  
+                        }
+                    </SCRIPT>
+                    
+                                </p:panel>
+                            </p:panel>
+                        </h:form>
+                    </p:panel>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

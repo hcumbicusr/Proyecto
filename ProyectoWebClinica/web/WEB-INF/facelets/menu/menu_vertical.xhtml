@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        
+    </h:head>
+   <h:body>
+        <ui:composition>
+            <h:form>
+               <p:panelMenu rendered="#{bUsuario.usuario_a.tipo_user eq 1 or bUsuario.usuario_a.cod_tipo_personal eq 5}" >
+                  <p:submenu label="Reportes de Pagos" icon="ui-icon-extlink"><p:separator/>
+                     <center>
+                     <p:menuitem  value="Pagos del Dia por Examenes" url="pagodiaexamen.jsf"/>
+                     <p:menuitem value="Pagos del Dia por Consultas" url="pagodiaconsulta.jsf"/>
+                     <p:menuitem value="Pagos Examenes por Fechas" url="pagoxdiaexamen.jsf"/>
+                     <p:menuitem value="Pagos Consultas por Fechas" url="pagoxdiaconsulta.jsf"/>
+                     </center>
+                  </p:submenu><p:separator/>
+               </p:panelMenu>
+            </h:form>
+        </ui:composition>
+    </h:body>
+</html>
+

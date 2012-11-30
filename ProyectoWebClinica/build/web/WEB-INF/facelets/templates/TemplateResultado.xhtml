@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+     <h:head>
+        <title><h:outputText  value="" /></title>
+       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+            <h:outputStylesheet library="css" name="estilo.css"/>
+    </h:head>
+    
+     <h:body onload="#{bUsuario.validarSesion()}">
+        <div align="north" cellpadding="0" cellspacing="0" width="100">
+            <ui:include src="/WEB-INF/facelets/menu/menu_resultado.xhtml"/>
+            <div cellpadding="0" cellspacing="0" class="imagen-logo">
+                <h:graphicImage value="resources/imagenes/logoclinica.png"/>
+            </div>  
+        </div>
+         <div>
+            <h:form style="float: right">
+                <p:splitButton  value="#{bUsuario.usuario_a.personal}">
+                    <p:menuitem value="Configurar Cuenta" action="configuracion.jsf"/>
+                    <p:menuitem value="Cerrar Sesion" actionListener="#{bUsuario.salirSistema()}"/>  
+                </p:splitButton> 
+            </h:form>
+         </div>
+        <div align="center">
+            <h:dataTable style=" width:1000px;" value="" var="item">
+                <h:column>
+                    <div class="lados" style=" width: 50px">
+                        <ui:insert name="left"> 
+                            
+                        </ui:insert>
+                    </div>
+                </h:column>  
+                
+                <h:column>
+                    <div align="center" style=" width: 900px" class="textoeditar">
+                        <ui:insert name="content"> 
+                           
+                        </ui:insert> 
+                    </div>
+                </h:column>
+                <h:column>
+                    <div class="lados" style=" width: 50px">
+                        <ui:insert name="right"> 
+                            
+                        </ui:insert>  
+                     </div>
+                </h:column>
+           </h:dataTable>
+       </div>
+       <div align="south" class="derechos">  
+                        <br/><br/>
+                        
+        </div>
+   </h:body>
+</html>

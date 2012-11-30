@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title><h:outputText  value="#{msg.paciente}" /></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+            <h:outputStylesheet library="css" name="estilo.css"/>
+    </h:head>
+    <h:body >
+        <ui:composition template="/WEB-INF/facelets/templates/TemplatePagina.xhtml">
+            <ui:define name="content">
+                <p:panel rendered="#{bUsuario.usuario_a.tipo_user eq 1 or bUsuario.usuario_a.cod_tipo_personal eq 5}">
+                    <h:outputText value="#{msg.reportes}"  styleClass="texto1"/>  
+                    <p:menu style="width:800px; text-align: center;">             
+                        <p:menuitem value="#{msg.reporte1}" styleClass="subtitulo" url="reporte_ingresomensual.jsf" />  
+                        <p:menuitem value="#{msg.reporte2}" styleClass="subtitulo" url="reporte_ingresomensual1.jsf" /> 
+                        <p:menuitem value="#{msg.reporte3}" styleClass="subtitulo" url="reporte_ingresomensual2.jsf" /> 
+                        <p:menuitem value="#{msg.reporte4}" styleClass="subtitulo" url="reporte_examenesmensual.jsf" /> 
+                        <p:menuitem value="#{msg.reporte5}" styleClass="subtitulo" url="reporte_examenesmensual1.jsf" /> 
+                    </p:menu> 
+                </p:panel>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

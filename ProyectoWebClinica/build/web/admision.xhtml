@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+
+    <h:head>
+        <title><h:outputText  value="#{msg.admision}" /></title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/WEB-INF/facelets/templates/TemplateAdmision.xhtml">
+            <ui:define name="content" class="fondo">
+                <h:form styleClass="text-justificado">
+                    <h1 class="admision">RESEÑA HISTÓRICA</h1> 
+                    <p class="reseña">El 27 DE Noviembre  del  2007,  la Universidad César  Vallejo,
+                        filial Piura, hace realidad uno de sus tantos  sueños, el  de 
+                        apertura el Centro Médico San Antonio, el mismo que abre sus 
+                        puertas con un novedoso principio de Medicina Integral, agrupando 
+                        en sus instalaciones especialidades médicas del momento y 
+                        los Servicios asistenciales más modernos de esta época, 
+                        contando con un staff de médicos altamente especializados en las 
+                        diversas ramas de la medicina humana.
+                        El centro médico San Antonio nace con el objetivo principal de 
+                        brindar salud dando la mejor atención y calidad de vida a nuestros 
+                        pacientes, además de ser integral en todas las especialidades y servicios.</p>
+                </h:form>
+                <center>
+                    <h:form>
+                        <p:galleria value="#{bgaleria.imagenes}"  
+                            var="gal" effect="slide" effectSpeed="800"  
+                            panelWidth="600" panelHeight="350" frameWidth="100" frameHeight="50"  
+                            filmstripPosition="top" showCaptions="true">
+                            <p:graphicImage id="playerImage" value="/resources/imagenes/#{gal.nombre_archivo}"/>  
+                            <p:galleriaOverlay title="#{player.descripcion}"/>  
+                        </p:galleria>
+                    </h:form>
+                </center>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

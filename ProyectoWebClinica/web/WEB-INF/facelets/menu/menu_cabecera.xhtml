@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <ui:insert name="title">
+            <title> <h:outputText value="#{msg.titulo}"/> </title>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+            <h:outputStylesheet library="css" name="estilo.css"/>
+        </ui:insert>
+    </h:head>
+    
+    <h:body onload="#{bUsuario.validarSesion()}">
+        <ui:composition>
+          <p:dock position="top">  
+                    <p:menuitem value="INICIO" icon="resources/imagenes/home_icon.png" url="admision.jsf"/>  
+                    <p:menuitem value="PACIENTE" icon="resources/imagenes/paciente.png" url="paciente.jsf"
+                                rendered="#{bUsuario.usuario_a.tipo_user eq 1 and bUsuario.usuario_a.cod_tipo_personal eq 5}"/>  
+                    <p:menuitem value="PERSONAL" icon="resources/imagenes/personal.png" url="personal.jsf"
+                                rendered="#{bUsuario.usuario_a.tipo_user eq 1}"/>  
+                    <p:menuitem value="ATENDER" icon="resources/imagenes/atender.png" url="atender.jsf"
+                                rendered="#{bUsuario.usuario_a.tipo_user eq 1 and bUsuario.usuario_a.cod_tipo_personal eq 5}"/>
+                    <p:menuitem value="HISTORIAL" icon="/resources/imagenes/historial.png" url="historial.jsf"
+                                rendered="#{bUsuario.usuario_a.tipo_user eq 1 and bUsuario.usuario_a.cod_tipo_personal eq 5}"/>   
+                    <p:menuitem value="EXAMEN" icon="resources/imagenes/examen.png" url="examen.jsf"
+                                rendered="#{bUsuario.usuario_a.tipo_user eq 1 and bUsuario.usuario_a.cod_tipo_personal eq 5}"/>  
+                    <p:menuitem value="CONSULTA" icon="/resources/imagenes/consulta.png" url="consulta.jsf"
+                                rendered="#{bUsuario.usuario_a.tipo_user eq 1 and bUsuario.usuario_a.cod_tipo_personal eq 5}"/> 
+                    <p:menuitem value="RESULTADOS" icon="/resources/imagenes/resultado.png" url="resultado.jsf"
+                                rendered="#{bUsuario.usuario_a.cod_tipo_personal eq 2 or bUsuario.usuario_a.cod_tipo_personal eq 1 or
+                                            bUsuario.usuario_a.cod_tipo_personal eq 3 or bUsuario.usuario_a.cod_tipo_personal eq 4}"/>  
+                    <p:menuitem value="PAGOS" icon="/resources/imagenes/pago.png" url="pago.jsf"
+                                rendered="#{bUsuario.usuario_a.tipo_user eq 1 and bUsuario.usuario_a.cod_tipo_personal eq 5}"/> 
+                    <p:menuitem value="CHAT" icon="/resources/imagenes/chat.png" url="#"/>  
+                    <p:menuitem value="REPORTES" icon="/resources/imagenes/reporte.png" url="reportes.jsf"
+                                rendered="#{bUsuario.usuario_a.tipo_user eq 1}"/> 
+                    <p:menuitem value="IMPRIMIR" icon="/resources/imagenes/imprimir.png" url="#"/>  
+                    <p:menuitem value="BUSCAR" icon="resources/imagenes/buscar.png" url="#"/>  
+             </p:dock> 
+    </ui:composition>
+    </h:body>
+</html>
+

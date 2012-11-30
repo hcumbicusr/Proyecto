@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <h:head>
+        <title><h:outputText  value="#{msg.acceso}" /></title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/WEB-INF/facelets/templates/TemplateAcceso.xhtml">
+            <ui:define name="content">
+               <p:tab id="tab1" title="Acceso">
+                   <p:fieldset legend="Acceso" style="width: 200px;" >
+                            <h:form id="acceder" >
+                                <p:panel id="nuevo_acceso" >
+                                    <p:growl id="estado" sticky="true" showDetail="true"/>
+                                    <h:panelGrid columns="1">
+                                        <h:outputLabel for="nom_usuario" value="(*)Usuario "/>
+                                        <h:panelGroup>
+                                            <p:inputText value="#{bUsuario.nom_user}" id="nom_usuario" required="true" title="Maximo 20 caracteres">
+                                                <f:validateLength minimum="2" maximum="20"/>
+                                            </p:inputText>
+                                            <p:tooltip for="nom_usuario" showEvent="focus" hideEvent="blur"/>
+                                            <p:message for="nom_usuario" display="icon"/>
+                                        </h:panelGroup><br/>
+                                        <h:outputLabel  value="(*)Contraseña "/>
+                                        <h:panelGroup>
+                                            <p:keyboard value="#{bUsuario.clave_user}" password="true" required="true" requiredMessage="Ingrese Contraseña" label="Contraseña" />
+                                        </h:panelGroup><br/>                
+                                        <p:commandButton value="Acceder" id="accesoUsuario" action="#{bUsuario.loginUsuario()}" global="false" style="margin-left:5px; float: right" update="estado,acceder">
+                                        </p:commandButton><br/> 
+                                    </h:panelGrid>
+                                </p:panel>
+                            </h:form>              
+                        </p:fieldset>                       
+                    </p:tab>
+            </ui:define>
+            
+            <ui:define name="left">
+                <h:form >
+                    <h2 class="texto1">Mision</h2> 
+                    <p class="texto2"> Brindar servicios de buena calidad
+                    de carácter integral a nuestros 
+                    clientes particulares y asegurados 
+                    enfocada a la prestacion de servicios 
+                    medicos altamente profesionales.</p>
+                    <h2 class="texto1">Vision</h2>
+                    <p class="texto2">Ser la mejor institución moderna, 
+                    eficiente, eficaz y competitiva 
+                    del sector privado de salud, 
+                    que se caracteriza por una 
+                    adecuada especialización  
+                    y capacidad de resolución 
+                    de problemas asistenciales
+                    de mediana y alta complejidad,
+                    de esta manera crear confianza, 
+                    seguridad y fidelidad en nuestros 
+                    pacientes.</p>
+                </h:form>
+              
+            </ui:define>
+            
+            <ui:define name="right">
+                <h:form>
+                    <h1 class="texto1">OBJETIVOS INSTITUCIONALES</h1> 
+                    <p class="texto2">Brindar una atención médica ambulatoria en forma integral y personalizada.<br/>
+                    Brindar una atención de calidad.<br/>
+                    Mayor satisfacción de nuestros usuarios.<br/>
+                    Contribuir con el desarrollo de la sociedad mediante la solución a los problemas de salud de nuestros pacientes.<br/>
+                    </p>
+                    <br/>
+                    <h1 class="texto1">Valores Institucionales</h1>
+                    <p class="texto2">1. VOCACION DE SERVICIO.<br/>
+                     2. RESPONSABILIDAD.<br/>
+                     3.	RESPETO.<br/>
+                     4.	COMPAÑERISMO.<br/>
+                     5.	HONRRADEZ.<br/>
+                     6.	PUNTUALIDAD.<br/>
+                    </p>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

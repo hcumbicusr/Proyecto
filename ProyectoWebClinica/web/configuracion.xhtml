@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        
+    </h:head>
+    <h:body>
+        <ui:composition template="/WEB-INF/facelets/templates/TemplateConfiguracion.xhtml">
+            <ui:define name="content" class="fondo">
+                <p:fieldset legend="Cambio de Contraseña" style="width: 300px;" >
+                    <h:form id="conf" >
+                        <p:panel id="configuracion" >
+                            <p:growl id="estado" sticky="true" showDetail="true"/>
+                            <h:panelGrid columns="2">
+                                <h:outputLabel value="(*)Usuario :"/>
+                                <h:panelGroup>
+                                    <p:inputText value="#{bUsuario.nom_user}" disabled="true"/>
+                                </h:panelGroup>
+                                <h:outputLabel for="contraseña1" value="(*)Contraseña Antigua: "/>
+                                <h:panelGroup>
+                                    <p:password id="contraseña1" value="#{bUsuario.usuario_a.clave}" feedback="true"/>  
+                                </h:panelGroup>
+                                <h:outputLabel for="contraseña2" value="(*)Contraseña Nueva: "/>
+                                <h:panelGroup>
+                                    <p:password id="contraseña2" value="#{bUsuario.usuario_a.clave2}" feedback="true"/>  
+                                </h:panelGroup>
+                                <br/><br/>
+                                <p:commandButton value="Aceptar" id="cambioUsuario" action="#{bUsuario.doActualizarContraseña}" global="false" 
+                                                 style="margin-left:5px; float: right" update="estado, configuracion"/>
+                            </h:panelGrid>
+                        </p:panel>
+                    </h:form>
+                </p:fieldset>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

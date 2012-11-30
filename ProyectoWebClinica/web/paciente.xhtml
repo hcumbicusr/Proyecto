@@ -1,0 +1,798 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <h:head>
+        <title><h:outputText  value="#{msg.paciente}" /></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+            <h:outputStylesheet library="css" name="estilo.css"/>
+    </h:head>
+    <h:body>
+        <ui:composition template="/WEB-INF/facelets/templates/TemplatePagina.xhtml">
+            <ui:define name="content">
+                <h:outputText value="Bienvenidos a Paciente" styleClass="texto1"/>
+                <br/><br/><br/>
+                <p:tabView id="tabPaciente">
+                    <p:tab id="tab1" title="Buscar">
+                        <h:form id="form_busq_boton"> 
+                            <p:panel visible="true" id="dni">
+                                <h:panelGrid columns="4" styleClass="marg-panel" cellpadding="5">
+                                <h:outputLabel for="busq_afiliado" value="Realizar Buqueda:"/>
+                                <p:inputMask id="busq_afiliado" value="#{bPaciente.parametro}" mask="99999999" required="true" size="20"/>
+                                <p:watermark for="busq_afiliado" value="Buscar Paciente"/>
+                                <p:commandButton id="buscaalumno" update="buscar_dni" icon="ui-icon-search" onclick="buscar_dni.show();"/>         
+                                </h:panelGrid>
+                            </p:panel>
+                            <p:growl id="messages" showDetail="true" />
+                            <p:panel id="buscar_dni" header="Paciente"  visible="false" widgetVar="buscar_dni" closable="true" toggleable="true">
+                            <p:dataTable var="busq" value="#{bPaciente.buscarPaciente}" emptyMessage="No se encontraron" paginator="true" rows="5" rowsPerPageTemplate="5,10,15,20">
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Nª Historia"/>
+                                        </f:facet>
+                                        <h:outputText value="#{busq.obj_hcl.cod_historiaclinica}"/>
+                                    </p:column>
+                                    <p:column> 
+                                        <f:facet name="header">
+                                            <h:outputText value="DNI"/>
+                                        </f:facet>
+                                        <h:outputText value="#{busq.dni_paciente}"/>
+                                    </p:column>
+                                    <p:column> 
+                                        <f:facet name="header">
+                                            <h:outputText value="Nombres"/>
+                                        </f:facet>
+                                        <h:outputText value="#{busq.nombres}"/>
+                                    </p:column>
+                                    <p:column> 
+                                        <f:facet name="header">
+                                            <h:outputText value="Apellidos"/>
+                                        </f:facet>
+                                        <h:outputText value="#{busq.apellidos}"/>
+                                    </p:column>
+                                    <p:column> 
+                                        <f:facet name="header">
+                                            <h:outputText value="Ocupacion"/>
+                                        </f:facet>
+                                        <h:outputText value="#{busq.ocupacion}"/>
+                                    </p:column>
+                            </p:dataTable>
+                            <p:commandButton value="Crear Examen" id="crearexamen" action="examen.jsf" icon="ui-icon-disk"/>
+                            <p:commandButton value="Crear Consulta" id="crearconsulta" type="reset" icon="ui-icon-document"/>    
+                           </p:panel>
+                       </h:form> 
+                    </p:tab>
+                    <p:tab id="tab2" title="Registrar Alumno">          
+                        <p:fieldset legend="Datos de Alumno" styleClass="field-izquierda">
+                            <h:form id="registraralumno">
+                                <p:panel id="nuevo_alumno">
+                                    <p:growl sticky="true" showDetail="true"/>
+                                    <h:panelGrid columns="8">
+                                        <h:outputLabel for="dni_alumno" value="(*)DNI"/>
+                                        <h:panelGroup>
+                                            <p:inputMask id="dni_alumno" value="#{bAlumno.alumno_a.dni_paciente}" mask="99999999" title="Formato: 00000000" required="true" size="12"/>
+                                            <p:tooltip for="dni_alumno" showEvent="focus" hideEvent="blur"/>
+                                            <p:message for="dni_alumno" display="icon"/>
+                                        </h:panelGroup>
+                                        <h:outputLabel for="nom_alumno" value="(*)NOMBRES"/>
+                                        <h:panelGroup>
+                                            <p:inputText value="#{bAlumno.alumno_a.nombres}" id="nom_alumno" required="true" title="Maximo 50 caracteres">
+                                                <f:validateLength minimum="2" maximum="50"/>
+                                            </p:inputText>
+                                            <p:tooltip for="nom_alumno" showEvent="focus" hideEvent="blur"/>
+                                            <p:message for="nom_alumno" display="icon"/>
+                                        </h:panelGroup>
+                                        <h:outputLabel for="ape_alumno" value="(*)APELLIDOS"/>
+                                        <h:panelGroup>
+                                            <p:inputText value="#{bAlumno.alumno_a.apellidos}" id="ape_alumno" required="true" title="Maximo 50 caracteres" size="30">
+                                                <f:validateLength minimum="2" maximum="50"/>
+                                            </p:inputText>
+                                            <p:tooltip for="ape_alumno" showEvent="focus" hideEvent="blur"/>
+                                            <p:message for="ape_alumno" display="icon"/>
+                                        </h:panelGroup>
+                                        <h:outputLabel for="sex_alumno" value="(*)SEXO"/>
+                                        <p:selectOneMenu value= "#{bAlumno.alumno_a.sexo}" id="sex_alumno">  
+                                            <f:selectItem itemLabel="" itemValue=""/> 
+                                            <f:selectItem itemLabel="Masculino" itemValue="M"/>  
+                                            <f:selectItem itemLabel="Femenino" itemValue="F"/> 
+                                        </p:selectOneMenu>
+                                        <h:outputLabel for="proc_alumno" value="(*)PROCEDENCIA"/>
+                                        <h:panelGroup>
+                                            <p:inputText value="#{bAlumno.alumno_a.procedencia}" id="proc_alumno" required="true" title="Maximo 50 caracteres">
+                                                <f:validateLength minimum="2" maximum="50"/>
+                                            </p:inputText>
+                                            <p:tooltip for="proc_alumno" showEvent="focus" hideEvent="blur"/>
+                                            <p:message for="proc_alumno" display="icon"/>
+                                        </h:panelGroup>
+                                        <h:outputText value="(*)NACIMIENTO"/>
+                                        <h:panelGroup>
+                                            <p:calendar effect="explode" value="#{bAlumno.alumno_a.fecha_nacimiento}" required="true" navigator="true" pattern="dd/MM/yyyy"/>                           
+                                        </h:panelGroup>
+                                        <h:outputLabel for="est_alumno" value="(*)ESTADO CIIVL"/>  
+                                        <p:selectOneMenu value= "#{bAlumno.alumno_a.estado_civil}" id="est_alumno">  
+                                            <f:selectItem itemLabel="" itemValue=""/> 
+                                            <f:selectItem itemLabel="SOLTERO" itemValue="SOLTERO"/>  
+                                            <f:selectItem itemLabel="CASADO" itemValue="CASADO"/>  
+                                            <f:selectItem itemLabel="VIUDO" itemValue="VIUDO"/>  
+                                            <f:selectItem itemLabel="DIVORCIADO" itemValue="DIVORCIADO"/> 
+                                        </p:selectOneMenu>
+                                        <h:outputLabel for="dir_alumno" value="(*)DIRECCION"/>
+                                        <h:panelGroup>
+                                            <p:inputText value="#{bAlumno.alumno_a.direccion}" id="dir_alumno" title="Maximo 100 Caracteres" required="true" size="25">
+                                                <f:validateLength minimum="2" maximum="100"/>
+                                            </p:inputText>
+                                                <p:tooltip for="dir_alumno" showEvent="focus" hideEvent="blur"/>
+                                                <p:message for="dir_alumno" display="icon"/>
+                                        </h:panelGroup>
+                                        <h:outputLabel for="tel_alumno" value="TELEFONO"/>
+                                        <h:panelGroup>
+                                            <p:inputMask id="tel_alumno" value="#{bAlumno.alumno_a.telefono}" mask="999999999" title="Formato: 000000000" required="false" size="12"/>
+                                            <p:tooltip for="tel_alumno" showEvent="focus" hideEvent="blur"/>
+                                            <p:message for="tel_alumno" display="icon"/>
+                                        </h:panelGroup>
+                                        <h:outputLabel for="esc_alumno" value="(*)ESCUELA"/>
+                                        <p:selectOneMenu value= "#{bAlumno.alumno_a.escuela}" id="esc_alumno">  
+                                            <f:selectItem itemLabel="" itemValue=""/> 
+                                            <f:selectItem itemLabel="SISTEMAS" itemValue="SISTEMAS"/>  
+                                            <f:selectItem itemLabel="INDUSTRIAL" itemValue="INDUSTRIAL"/>  
+                                            <f:selectItem itemLabel="ADMINISTRACION" itemValue="ADMINISTRACION"/>  
+                                            <f:selectItem itemLabel="MARKETING" itemValue="MARKETING"/> 
+                                        </p:selectOneMenu>
+                                        <h:outputLabel for="año_alumno" value="AÑO INGRESO"/>
+                                        <h:panelGroup>
+                                            <p:inputMask id="año_alumno" value="#{bAlumno.alumno_a.año_ingreso}" mask="9999" title="Formato: 0000" required="true" size="6"/>
+                                            <p:tooltip for="año_alumno" showEvent="focus" hideEvent="blur"/>
+                                            <p:message for="año_alumno" display="icon"/>
+                                        </h:panelGroup>
+                                        <h:outputLabel for="ciclo_alumno"  value="(*)CICLO"/>  
+                                        <p:selectOneMenu value= "#{bAlumno.alumno_a.ciclo}" id="ciclo_alumno">  
+                                            <f:selectItem itemLabel="" itemValue=""/> 
+                                            <f:selectItem itemLabel="I" itemValue="I"/>  
+                                            <f:selectItem itemLabel="II" itemValue="II"/>  
+                                            <f:selectItem itemLabel="III" itemValue="III"/>  
+                                            <f:selectItem itemLabel="IV" itemValue="IV"/>  
+                                            <f:selectItem itemLabel="V" itemValue="V"/> 
+                                            <f:selectItem itemLabel="VI" itemValue="VI"/> 
+                                            <f:selectItem itemLabel="VII" itemValue="VII"/>
+                                            <f:selectItem itemLabel="VIII" itemValue="VIII"/> 
+                                            <f:selectItem itemLabel="IX" itemValue="IX"/>
+                                            <f:selectItem itemLabel="X" itemValue="X"/> 
+                                        </p:selectOneMenu>
+                                        <h:outputLabel for="coduniv_alumno" value="(*)CODIGO UNIVERSITARIO"/>
+                                        <h:panelGroup>
+                                            <p:inputMask id="coduniv_alumno" value="#{bAlumno.alumno_a.codigo_univ}" mask="9999999999" title="Formato:0000000000" required="true" size="14"/>
+                                            <p:tooltip for="coduniv_alumno" showEvent="focus" hideEvent="blur"/>
+                                            <p:message for="coduniv_alumno" display="icon"/>
+                                        </h:panelGroup>
+                                    </h:panelGrid>
+                                    <p:commandButton value="Registrar" id="savealumno" actionListener="#{bAlumno.doRegistrarAlumno}" action="#{bAlumno.reinit()}"
+                                                     update="nuevo_alumno, :tabPaciente:form_afiliados:listar_afiliado, :tabPaciente:form_alumnos:listar_alumno,
+                                                     :tabPaciente:form_editaralumno:editar_alumno,:tabPaciente:form_editaralumno2:editar_alumno2" icon="ui-icon-disk" onclick="c_e.show();"/>
+                                    <p:commandButton value="Limpiar" type="reset" icon="ui-icon-document" />
+                                </p:panel>
+                                <br/>
+                                <p:panel id="c_e" visible="false">
+                                    <center>
+                                    <p:commandButton value="Crear Examen" id="crearexamen" action="examen.jsf" icon="ui-icon-disk"/>
+                                    <p:commandButton value="Crear Consulta" id="crearconsulta" type="reset" icon="ui-icon-document"/>
+                                    </center>
+                               </p:panel>
+                            </h:form>
+                        </p:fieldset>
+                    </p:tab>                    
+                    <p:tab id="tab3" title="Registrar Paciente">                             
+                        <p:fieldset legend="Datos de Paciente" styleClass="field-izquierda">
+                            <h:form id="registrarpaciente">
+                                <p:panel id="nuevo_paciente">
+                                    <p:growl sticky="true" showDetail="true"/>
+                                    <h:panelGrid columns="8">
+                                        <h:outputLabel for="dni_paciente" value="(*)DNI"/>
+                                        <h:panelGroup>
+                                            <p:inputMask id="dni_paciente" value="#{bPaciente.paciente_a.dni_paciente}" mask="99999999" title="Formato: 00000000"  size="12"/>
+                                            <p:tooltip for="dni_paciente" showEvent="focus" hideEvent="blur"/>
+                                            <p:message for="dni_paciente" display="icon"/>
+                                        </h:panelGroup>
+                                        <h:outputLabel for="nom_paciente" value="(*)NOMBRES"/>
+                                        <h:panelGroup>
+                                            <p:inputText value="#{bPaciente.paciente_a.nombres}" id="nom_paciente" required="true" title="Maximo 50 caracteres">
+                                                <f:validateLength minimum="2" maximum="50"/>
+                                            </p:inputText>
+                                            <p:tooltip for="nom_paciente" showEvent="focus" hideEvent="blur"/>
+                                            <p:message for="nom_paciente" display="icon"/>
+                                        </h:panelGroup>
+                                        <h:outputLabel for="ape_paciente" value="(*)APELLIDOS"/>
+                                        <h:panelGroup>
+                                            <p:inputText value="#{bPaciente.paciente_a.apellidos}" id="ape_paciente" required="true" title="Maximo 50 caracteres" size="30">
+                                                <f:validateLength minimum="2" maximum="50"/>
+                                            </p:inputText>
+                                            <p:tooltip for="ape_paciente" showEvent="focus" hideEvent="blur"/>
+                                            <p:message for="ape_paciente" display="icon"/>
+                                        </h:panelGroup>
+                                        <h:outputLabel for="sex_paciente" value="(*)SEXO"/>
+                                        <p:selectOneMenu value= "#{bPaciente.paciente_a.sexo}" id="sex_paciente">  
+                                            <f:selectItem itemLabel="" itemValue=""/> 
+                                            <f:selectItem itemLabel="Masculino" itemValue="M"/>  
+                                            <f:selectItem itemLabel="Femenino" itemValue="F"/> 
+                                        </p:selectOneMenu>
+                                        <h:outputLabel for="ocup_paciente" value="(*)OCUPACION"/>
+                                        <h:panelGroup>
+                                            <p:inputText value="#{bPaciente.paciente_a.ocupacion}" id="ocup_paciente" required="true" title="Maximo 50 caracteres">
+                                                <f:validateLength minimum="2" maximum="50"/>
+                                            </p:inputText>
+                                            <p:tooltip for="ocup_paciente" showEvent="focus" hideEvent="blur"/>
+                                            <p:message for="ocup_paciente" display="icon"/>
+                                        </h:panelGroup>
+                                        <h:outputLabel for="proc_paciente" value="(*)PROCEDENCIA"/>
+                                        <h:panelGroup>
+                                            <p:inputText value="#{bPaciente.paciente_a.procedencia}" id="proc_paciente" required="true" title="Maximo 50 caracteres">
+                                                <f:validateLength minimum="2" maximum="50"/>
+                                            </p:inputText>
+                                            <p:tooltip for="proc_paciente" showEvent="focus" hideEvent="blur"/>
+                                            <p:message for="proc_paciente" display="icon"/>
+                                        </h:panelGroup>
+                                        <h:outputLabel for="fec_paciente" value="(*)NACIMIENTO"/>
+                                        <h:panelGroup>
+                                            <p:calendar effect="explode" id="fec_paciente" value="#{bPaciente.paciente_a.fecha_nacimiento}" required="true" navigator="true" pattern="dd/MM/yyyy"/>                           
+                                        </h:panelGroup>
+                                        <h:outputLabel for="esta_paciente" value="(*)ESTADO CIIVL"/>  
+                                        <p:selectOneMenu value= "#{bPaciente.paciente_a.estado_civil}" id="esta_paciente">  
+                                            <f:selectItem itemLabel="" itemValue=""/> 
+                                            <f:selectItem itemLabel="SOLTERO" itemValue="SOLTERO"/>  
+                                            <f:selectItem itemLabel="CASADO" itemValue="CASADO"/>  
+                                            <f:selectItem itemLabel="VIUDO" itemValue="VIUDO"/>  
+                                            <f:selectItem itemLabel="DIVORCIADO" itemValue="DIVORCIADO"/>  
+                                        </p:selectOneMenu>
+                                        <h:outputLabel for="dir_paciente" value="(*)DIRECCION"/>
+                                        <h:panelGroup>
+                                            <p:inputText value="#{bPaciente.paciente_a.direccion}" id="dir_paciente" title="Maximo 100 Caracteres" required="true" size="30">
+                                                <f:validateLength minimum="2" maximum="100"/>
+                                            </p:inputText>
+                                                <p:tooltip for="dir_paciente" showEvent="focus" hideEvent="blur"/>
+                                                <p:message for="dir_paciente" display="icon"/>
+                                        </h:panelGroup>
+                                        <h:outputLabel for="tel_paciente" value="TELEFONO"/>
+                                        <h:panelGroup>
+                                            <p:inputMask id="tel_paciente" value="#{bPaciente.paciente_a.telefono}" mask="999999999" title="Formato: 000000000" required="false" size="9"/>
+                                            <p:tooltip for="tel_paciente" showEvent="focus" hideEvent="blur"/>
+                                            <p:message for="tel_paciente" display="icon"/>
+                                        </h:panelGroup> 
+                                    </h:panelGrid>
+                                    <p:commandButton value="Registrar" id="savepaciente" actionListener="#{bPaciente.doRegistrarPaciente}" action="#{bPaciente.reinit()}"
+                                                     update="nuevo_paciente, :tabPaciente:form_afiliados:listar_afiliado, :tabPaciente:form_paciente:listar_paciente,
+                                                     :tabPaciente:form_editarpaciente:editar_paciente,:tabPaciente:form_editarpaciente2:editar_paciente2"  icon="ui-icon-disk" onclick="c_e2.show();"/>
+                                    <p:commandButton value="Limpiar" type="reset" icon="ui-icon-document"/>
+                                </p:panel>
+                                <p:panel id="c_e2" visible="false">
+                                    <center>
+                                        <p:commandButton value="Crear Examen" id="crearexamen" binding="" actionListener="examen.jsf" icon="ui-icon-disk"/>
+                                    <p:commandButton value="Crear Consulta" id="crearconsulta" type="reset" icon="ui-icon-document"/>
+                                    </center>
+                               </p:panel>
+                            </h:form>
+                        </p:fieldset>
+                    </p:tab>
+                    <p:tab id="tab4" title="Listar">
+                        <h:form id="check">
+                            <h:panelGrid columns="3" styleClass="marg-panel" cellpadding="5">  
+                                 <h:outputText value="Listar Por:"/>  
+                                    <h:selectOneRadio  id="opciones">  
+                                        <f:selectItem  itemLabel="Afilados"/>  
+                                        <f:selectItem  itemLabel= "Alumnos"/>  
+                                        <f:selectItem  itemLabel = "Pacientes"/>  
+                                    </h:selectOneRadio>  
+                                 <p:commandButton value="Listar" id="list" update="" icon="ui-icon-clipboard"/>
+                            </h:panelGrid>
+                        </h:form>
+                        <p:growl sticky="true" showDetail="true"/>
+                        <h:form id="form_afiliados">
+                            <p:panel id="listar_afiliado" header="Listando Afiliados">
+                                <p:dataTable id="afiliadoTable" var="afil" value="#{bPaciente.listarAfiliados}" emptyMessage="No se encontraron" paginator="true" rows="5" rowsPerPageTemplate="5,10,15,20">
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Nª Historia"/>
+                                        </f:facet>
+                                        <h:outputText value="#{afil.obj_hcl.cod_historiaclinica}"/>
+                                    </p:column>
+                                    <!-- sortBy=para ordenar por nombre; filtered=filtra por nombre -->
+                                    <p:column filterBy="#{afil.dni_paciente}" filterMatchMode="contains"> 
+                                        <f:facet name="header">
+                                            <h:outputText value="DNI"/>
+                                        </f:facet>
+                                        <h:outputText value="#{afil.dni_paciente}"/>
+                                    </p:column>
+                                    <p:column> 
+                                        <f:facet name="header">
+                                            <h:outputText value="Nombres"/>
+                                        </f:facet>
+                                        <h:outputText value="#{afil.nombres}"/>
+                                    </p:column>
+                                    <p:column sortBy="#{afil.apellidos}" filterBy="#{afil.apellidos}" filterMatchMode="contains"> 
+                                        <f:facet name="header">
+                                            <h:outputText value="Apellidos"/>
+                                        </f:facet>
+                                        <h:outputText value="#{afil.apellidos}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Sexo"/>
+                                        </f:facet>
+                                        <h:outputText value="#{afil.sexo}"/>
+                                    </p:column>
+                                    <p:column filterBy="#{afil.ocupacion}" filterMatchMode="contains">
+                                        <f:facet name="header">
+                                            <h:outputText value="Ocupacion"/>
+                                        </f:facet>
+                                        <h:outputText value="#{afil.ocupacion}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Procedencia"/>
+                                        </f:facet>
+                                        <h:outputText value="#{afil.procedencia}"/>
+                                    </p:column>
+                                    <p:column exportable="false" style="width:4%" >  
+                                        <p:commandButton id="selectButton" update=":tabPaciente:form_afiliados:displayafil" oncomplete="afilDialog.show()" icon="ui-icon-search" title="Detalles">  
+                                            <f:setPropertyActionListener value="#{afil}" target="#{bPaciente.selectedPaciente}" />  
+                                        </p:commandButton>  
+                                     </p:column> 
+                                </p:dataTable> 
+                                <p:panel header="Exportar Todos los Datos">
+                                    <h:commandLink>
+                                        <p:graphicImage value="resources/imagenes/excel.png"/>
+                                        <p:dataExporter type="xls" target="afiliadoTable" fileName="afiliados" />
+                                    </h:commandLink>
+                                    <h:commandLink>
+                                        <p:graphicImage value="resources/imagenes/pdf.png"/>
+                                        <p:dataExporter type="pdf" target="afiliadoTable" fileName="afiliados"/>
+                                    </h:commandLink>
+                                </p:panel>
+                                <p:dialog header="Detalle de Afiliado" widgetVar="afilDialog" resizable="false" id="afilDlg" showEffect="fade" hideEffect="explode" modal="false">
+                                    <h:panelGrid id="displayafil" columns="2" cellpadding="4" style="margin:0 auto;">
+                                            <h:outputText value="Telefono:" />  
+                                            <h:outputText value="#{bPaciente.selectedPaciente.telefono}" style="font-weight:bold"/>    
+                                            <h:outputText value="Direccion:" />  
+                                            <h:outputText value="#{bPaciente.selectedPaciente.direccion}" style="font-weight:bold"/>    
+                                            <h:outputText value="Fecha Nacimiento:" />  
+                                            <h:outputText value="#{bPaciente.selectedPaciente.fecha_nascimiento2}" style="font-weight:bold"/>                        
+                                            <h:outputText value="Estado Civil:" />  
+                                            <h:outputText value="#{bPaciente.selectedPaciente.estado_civil}" style="font-weight:bold"/>  
+                                    </h:panelGrid>
+                                </p:dialog>
+                            </p:panel>
+                        </h:form>
+                        <p:growl sticky="true" showDetail="true"/>
+                        <h:form id="form_alumnos">
+                            <p:panel id="listar_alumno" header="Listando Alumno">
+                                <p:dataTable id="alumnoTable" var="alum" value="#{bAlumno.cargarAlumnos}" emptyMessage="No se encontraron Alumnos" paginator="true" rows="5" rowsPerPageTemplate="5,10,15,20">
+                                    <p:column>
+                                        <f:facet name="header">
+                                                <h:outputText value="N° Historia"/>
+                                           </f:facet>
+                                        <h:outputText value="#{alum.obj_hcl.cod_historiaclinica}"/>
+                                    </p:column>
+                                    <p:column filterBy="#{alum.dni_paciente}" filterMatchMode="contains">
+                                        <f:facet name="header">
+                                                <h:outputText value="DNI"/>
+                                           </f:facet>
+                                        <h:outputText value="#{alum.dni_paciente}"/>
+                                    </p:column>
+                                    <p:column filterBy="#{alum.codigo_univ}" filterMatchMode="contains">
+                                        <f:facet name="header">
+                                                <h:outputText value="Codigo Universsitario"/>
+                                        </f:facet>
+                                        <h:outputText value="#{alum.codigo_univ}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                                <h:outputText value="Nombres"/>
+                                           </f:facet>
+                                        <h:outputText value="#{alum.nombres}"/>
+                                    </p:column>
+                                    <p:column filterBy="#{alum.apellidos}" filterMatchMode="contains">
+                                        <f:facet name="header">
+                                                <h:outputText value="Apellidos"/>
+                                           </f:facet>
+                                        <h:outputText value="#{alum.apellidos}"/>
+                                    </p:column>
+                                    <p:column filterBy="#{alum.escuela}" filterMatchMode="contains">
+                                        <f:facet name="header">
+                                                <h:outputText value="Escuela"/>
+                                        </f:facet>
+                                        <h:outputText value="#{alum.escuela}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                                <h:outputText value="Ciclo"/>
+                                           </f:facet>
+                                        <h:outputText value="#{alum.ciclo}"/>
+                                    </p:column>
+                                    <p:column exportable="false" style="width:4%" >  
+                                        <p:commandButton id="selectButton" update=":tabPaciente:form_alumnos:displayalum" oncomplete="alumDialog.show()" icon="ui-icon-search" title="Detalles">  
+                                            <f:setPropertyActionListener value="#{alum}" target="#{bAlumno.selectedAlumno}" />  
+                                        </p:commandButton>  
+                                     </p:column> 
+                                </p:dataTable>
+                                <p:panel header="Exportar Todos los Datos">
+                                        <h:commandLink>
+                                            <p:graphicImage value="resources/imagenes/excel.png"/>
+                                            <p:dataExporter type="xls" target="alumnoTable" fileName="alumnos" />
+                                        </h:commandLink>
+                                        <h:commandLink>
+                                            <p:graphicImage value="resources/imagenes/pdf.png"/>
+                                            <p:dataExporter type="pdf" target="alumnoTable" fileName="alumnos"/>
+                                        </h:commandLink>
+                                    </p:panel>
+                                    <p:dialog header="Detalles de Alumno" widgetVar="alumDialog" resizable="false" id="alumDlg" showEffect="fade" hideEffect="explode" modal="false">
+                                        <h:panelGrid id="displayalum" columns="2" cellpadding="4" style="margin:0 auto;">
+                                                <h:outputText value="Año de Ingreso:" />  
+                                                <h:outputText value="#{bAlumno.selectedAlumno.año_ingreso}" style="font-weight:bold"/>    
+                                                <h:outputText value="Sexo:" />  
+                                                <h:outputText value="#{bAlumno.selectedAlumno.sexo}" style="font-weight:bold"/>    
+                                                <h:outputText value="Fecha Nacimiento:" />  
+                                                <h:outputText value="#{bAlumno.selectedAlumno.fecha_nascimiento2}" style="font-weight:bold"/>                        
+                                                <h:outputText value="Procedencia:" />  
+                                                <h:outputText value="#{bAlumno.selectedAlumno.procedencia}" style="font-weight:bold"/>  
+                                                <h:outputText value="Telefono:" />  
+                                                <h:outputText value="#{bAlumno.selectedAlumno.telefono}" style="font-weight:bold"/>    
+                                                <h:outputText value="Direccion:" />  
+                                                <h:outputText value="#{bAlumno.selectedAlumno.direccion}" style="font-weight:bold"/>    
+                                        </h:panelGrid>
+                                    </p:dialog>
+                            </p:panel>
+                        </h:form>
+                        <p:growl sticky="true" showDetail="true"/>
+                        <h:form id="form_paciente">
+                            <p:panel id="listar_paciente" header="Listando Paciente">
+                                <p:dataTable id="pacientesTable" var="pac" value="#{bPaciente.cargarPacientes}" emptyMessage="No se encontraron Pacientes" paginator="true" rows="5" rowsPerPageTemplate="5,10,15,20">
+                                    <p:column>
+                                        <f:facet name="header">
+                                                <h:outputText value="N° Historia"/>
+                                           </f:facet>
+                                        <h:outputText value="#{pac.obj_hcl.cod_historiaclinica}"/>
+                                    </p:column>
+                                    <p:column filterBy="#{pac.dni_paciente}" filterMatchMode="contains">
+                                        <f:facet name="header">
+                                                <h:outputText value="DNI"/>
+                                         </f:facet>
+                                        <h:outputText value="#{pac.dni_paciente}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                                <h:outputText value="Nombres"/>
+                                           </f:facet>
+                                        <h:outputText value="#{pac.nombres}"/>
+                                    </p:column>
+                                    <p:column filterBy="#{pac.apellidos}" filterMatchMode="contains">
+                                        <f:facet name="header">
+                                                <h:outputText value="Apellidos"/>
+                                           </f:facet>
+                                        <h:outputText value="#{pac.apellidos}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                                <h:outputText value="Sexo"/>
+                                           </f:facet>
+                                        <h:outputText value="#{pac.sexo}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                                <h:outputText value="Ocupacion"/>
+                                           </f:facet>
+                                        <h:outputText value="#{pac.ocupacion}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                                <h:outputText value="Estado Civil"/>
+                                           </f:facet>
+                                        <h:outputText value="#{pac.estado_civil}"/>
+                                    </p:column>
+                                    <p:column exportable="false" style="width:4%" >  
+                                        <p:commandButton id="selectButton" update=":tabPaciente:form_paciente:displaypac" oncomplete="pacDialog.show()" icon="ui-icon-search" title="Detalles">  
+                                            <f:setPropertyActionListener value="#{pac}" target="#{bPaciente.selectedPaciente}" />  
+                                        </p:commandButton>  
+                                     </p:column>
+                                </p:dataTable>
+                                <p:panel header="Exportar Todos los Datos">
+                                        <h:commandLink>
+                                            <p:graphicImage value="resources/imagenes/excel.png"/>
+                                            <p:dataExporter type="xls" target="alumnoTable" fileName="pacientes" />
+                                        </h:commandLink>
+                                        <h:commandLink>
+                                            <p:graphicImage value="resources/imagenes/pdf.png"/>
+                                            <p:dataExporter type="pdf" target="alumnoTable" fileName="pacientes"/>
+                                        </h:commandLink>
+                               </p:panel>
+                                <p:dialog header="Detalles de Paciente" widgetVar="pacDialog" resizable="false" id="pacDlg" showEffect="fade" hideEffect="explode" modal="false">
+                                        <h:panelGrid id="displaypac" columns="2" cellpadding="4" style="margin:0 auto;">
+                                                <h:outputText value="Fecha Nacimiento:" />  
+                                                <h:outputText value="#{bPaciente.selectedPaciente.fecha_nascimiento2}" style="font-weight:bold"/>                                       
+                                                <h:outputText value="Procedencia:" />  
+                                                <h:outputText value="#{bPaciente.selectedPaciente.procedencia}" style="font-weight:bold"/>  
+                                                <h:outputText value="Telefono:" />  
+                                                <h:outputText value="#{bPaciente.selectedPaciente.telefono}" style="font-weight:bold"/>    
+                                                <h:outputText value="Direccion:" />  
+                                                <h:outputText value="#{bPaciente.selectedPaciente.direccion}" style="font-weight:bold"/>    
+                                        </h:panelGrid>
+                                    </p:dialog>
+                            </p:panel>
+                        </h:form>
+                    </p:tab>
+                    <p:tab id="tab5" title="Editar Datos Paciente" >
+                        <p:growl sticky="true"  showDetail="true"/>               
+                        <h:form id="form_editarpaciente">
+                            <p:panel id="editar_paciente" header="Edicion Paciente Forma 01 ">
+                                <p:dataTable id="pacienteTableEdit"   widgetVar="pacienteTableEdit" var="pac" value="#{bPaciente.listarAfiliados}" paginator="true" rows="5" editable="true" emptyMessage="No Empresas encontradas" rowsPerPageTemplate="10,15,20">
+                                    <p:ajax event="rowEdit" listener="#{bPaciente.onEdit}" />  
+                                    <p:ajax event="rowEditCancel" listener="#{bPaciente.onCancel}" />       
+                                    <p:column headerText="Historial"  width="50"> 
+                                        <h:outputText value="#{pac.obj_hcl.cod_historiaclinica}" /> 
+                                    </p:column>
+                                    <p:column headerText="DNI" filterBy="#{pac.dni_paciente}" filterMatchMode="contains" >
+                                        <p:cellEditor>       
+                                            <f:facet name="output"> 
+                                                <h:outputText value="#{pac.dni_paciente}" />
+                                            </f:facet>      
+                                            <f:facet name="input"> 
+                                                <p:inputText value="#{pac.nombres}" style="width:100%"/>                                 
+                                            </f:facet>      
+                                        </p:cellEditor>
+                                      </p:column>
+                                    <p:column headerText="Nombre" filterBy="#{paci.nombres}"  filterMatchMode="contains" >
+                                        <p:cellEditor>       
+                                            <f:facet name="output"> 
+                                                <h:outputText value="#{pac.nombres}" />
+                                            </f:facet>      
+                                            <f:facet name="input"> 
+                                                <p:inputText value="#{pac.nombres}" style="width:100%"/>                                 
+                                            </f:facet>      
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column headerText="Apellido" filterBy="#{pac.apellidos}" filterMatchMode="contains">
+                                        <p:cellEditor>       
+                                            <f:facet name="output"> 
+                                                <h:outputText value="#{pac.apellidos}" />
+                                            </f:facet>      
+                                            <f:facet name="input"> 
+                                                <p:inputText value="#{pac.apellidos}" style="width:100%"/>                                 
+                                            </f:facet>      
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column headerText="Fecha Nacimiento">
+                                        <p:cellEditor>       
+                                            <f:facet name="output"> 
+                                                <h:outputText value="#{pac.fecha_nascimiento2}" />
+                                            </f:facet>      
+                                            <f:facet name="input"> 
+                                                <h:panelGroup>
+                                                    <p:calendar effect="explode" id="fec_paciente" value="#{pac.fecha_nacimiento}" required="true" navigator="true" pattern="dd/MM/yyyy"/>                           
+                                                </h:panelGroup>                                 
+                                            </f:facet>      
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column headerText="Direccion">
+                                        <p:cellEditor>       
+                                            <f:facet name="output"> 
+                                                <h:outputText value="#{pac.direccion}" />
+                                            </f:facet>      
+                                            <f:facet name="input"> 
+                                                <p:inputText value="#{pac.direccion}" style="width:100%"/>                                 
+                                            </f:facet>      
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column headerText="Telefono o Celular">
+                                        <p:cellEditor>       
+                                            <f:facet name="output"> 
+                                                <h:outputText value="#{pac.telefono}" />
+                                            </f:facet>      
+                                            <f:facet name="input"> 
+                                                <p:inputText value="#{pac.telefono}" style="width:100%"/>                                 
+                                            </f:facet>      
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column headerText="Opcion" width="50">  
+                                        <p:rowEditor />  
+                                    </p:column> 
+                                </p:dataTable>      
+                            </p:panel> 
+                        </h:form> 
+                         <h:form id="form_editarpaciente2">                 
+                            <p:panel id="editar_paciente2" header="Edicion Paciente Forma 02 ">                 
+                                <p:dataTable id="pacienteTableactualiar2"   widgetVar="pacienteTableactualizar2" var="paci" value="#{bPaciente.listarAfiliados}" paginator="true" rows="5" editable="true" emptyMessage="No Empresas encontradas" rowsPerPageTemplate="10,15,20">                                                          
+                                    <p:column headerText="Historial" width="50">  
+                                        <h:outputText value="#{paci.obj_hcl.cod_historiaclinica}" />
+                                    </p:column>
+                                    <p:column headerText="Dni" filterBy="#{paci.dni_paciente}"  filterMatchMode="contains" >  
+                                        <h:outputText value="#{paci.dni_paciente}" />
+                                    </p:column>
+                                    <p:column headerText="Nombre" filterBy="#{paci.nombres}"  filterMatchMode="contains">  
+                                        <h:outputText value="#{paci.nombres}" />
+                                    </p:column>               
+                                    <p:column headerText="Apellidos" filterBy="#{paci.apellidos}"  filterMatchMode="contains">  
+                                                      <h:outputText value="#{paci.apellidos}" />
+                                    </p:column>
+                                    <p:column  headerText="Fecha Nacimiento">  
+                                        <h:outputText value="#{paci.fecha_nascimiento2}" />
+                                    </p:column> 
+                                    <p:column  headerText="Direccion">  
+                                                          <h:outputText value="#{paci.direccion}" />
+                                    </p:column>        
+                                    <p:column headerText="Telefono">  
+                                                      <h:outputText value="#{paci.telefono}" />
+                                    </p:column>                      
+                                    <p:column style="width:4%" headerText="Opcion" >  
+                                        <p:commandButton id="selectButton2" update=":tabPaciente:form_actualizar:actualizar_paciente2" oncomplete="pacDialog2.show()" icon="ui-icon-pencil" title="Detalles">  
+                                            <f:setPropertyActionListener value="#{paci}" target="#{bPaciente.selectedPaciente}" />  
+                                        </p:commandButton>  
+                                    </p:column>                   
+                                 </p:dataTable>
+                            </p:panel>
+                        </h:form>
+                        <h:form id="form_actualizar">                              
+                            <p:dialog header="Actualizando Paciente" widgetVar="pacDialog2" resizable="false" id="pacDlg2" showEffect="fade" hideEffect="explode" modal="false">    
+                                <p:panel id="actualizar_paciente2"> 
+                                    <p:growl sticky="true"  showDetail="true"/>                  
+                                    <h:panelGrid columns="2" cellpadding="4" style="margin:0 auto;"> 
+                                        <h:outputText value="DNI:" />  
+                                        <p:inputText value="#{bPaciente.selectedPaciente.dni_paciente}" style="font-weight:bold"/>
+                                        <h:outputText value="Nombre:" />  
+                                        <p:inputText value="#{bPaciente.selectedPaciente.nombres}" style="font-weight:bold"/>    
+                                        <h:outputText value="Apellidos:" />  
+                                        <p:inputText value="#{bPaciente.selectedPaciente.apellidos}" style="font-weight:bold"/> 
+                                        <h:outputText value="Fecha Nacimiento:" />  
+                                        <h:panelGroup>
+                                            <p:calendar effect="explode" id="fec_paciente" value="#{bPaciente.selectedPaciente.fecha_nacimiento}" required="true" navigator="true" pattern="dd/MM/yyyy"/>                           
+                                        </h:panelGroup>
+                                        <h:outputText value="Direccion:" />  
+                                        <p:inputText value="#{bPaciente.selectedPaciente.direccion}" style="font-weight:bold"/>  
+                                        <h:outputText value="Telefono:" />  
+                                        <p:inputText value="#{bPaciente.selectedPaciente.telefono}" style="font-weight:bold"/>  
+                                        <p:commandButton  value="Actualizar" id="updatePaciente" actionListener="#{bPaciente.doActualizarPaciente}" update="actualizar_paciente2" />
+                                    </h:panelGrid>                      
+                               </p:panel>
+                            </p:dialog>                  
+                        </h:form>                
+                    </p:tab>
+                      <p:tab id="tab6" title="Editar Datos Alumno" >
+                        <p:growl sticky="true"  showDetail="true"/>               
+                        <h:form id="form_editaralumno">
+                            <p:panel id="editar_alumno" header="Edicion Alumno Forma 01 ">
+                                <p:dataTable id="alumnoTableEdit"   widgetVar="alumnoTableEdit" var="alum" value="#{bAlumno.cargarAlumnos}" paginator="true" rows="5" editable="true" emptyMessage="No Empresas encontradas" rowsPerPageTemplate="10,15,20">
+                                    <p:ajax event="rowEdit" listener="#{ bAlumno.onEdit}" />  
+                                    <p:ajax event="rowEditCancel" listener="#{ bAlumno.onCancel}" />       
+                                    <p:column headerText="Historial">
+                                        <f:facet name="header">
+                                                <h:outputText value="Historial"/>
+                                         </f:facet>
+                                        <h:outputText value="#{alum.obj_hcl.cod_historiaclinica}"/>
+                                    </p:column>
+                                    <p:column headerText="DNI" filterBy="#{alum.dni_paciente}" filterMatchMode="contains">
+                                        <p:cellEditor>       
+                                            <f:facet name="output"> 
+                                                <h:outputText value="#{alum.dni_paciente}" />
+                                            </f:facet>      
+                                            <f:facet name="input"> 
+                                                <p:inputText value="#{alum.dni_paciente}" style="width:100%"/>                                 
+                                            </f:facet>      
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column headerText="Nombre" filterBy="#{alum.nombres}" filterMatchMode="contains">
+                                        <p:cellEditor>       
+                                            <f:facet name="output"> 
+                                                <h:outputText value="#{alum.nombres}" />
+                                            </f:facet>      
+                                            <f:facet name="input"> 
+                                                <p:inputText value="#{alum.nombres}" style="width:100%"/>                                 
+                                            </f:facet>      
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column headerText="Apellido" filterBy="#{alum.apellidos}" filterMatchMode="contains">
+                                        <p:cellEditor>       
+                                            <f:facet name="output"> 
+                                                <h:outputText value="#{alum.apellidos}" />
+                                            </f:facet>      
+                                            <f:facet name="input"> 
+                                                <p:inputText value="#{alum.apellidos}" style="width:100%"/>                                 
+                                            </f:facet>      
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column headerText="Codigo Universitario" filterBy="#{alum.codigo_univ}" filterMatchMode="contains">
+                                        <p:cellEditor>       
+                                            <f:facet name="output"> 
+                                                <h:outputText value="#{alum.codigo_univ}"/>
+                                            </f:facet>      
+                                            <f:facet name="input"> 
+                                                <p:inputText value="#{alum.codigo_univ}" style="width:100%"/>                                 
+                                            </f:facet>      
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column headerText="Escuela">
+                                        <p:cellEditor>       
+                                            <f:facet name="output"> 
+                                                <h:outputText value="#{alum.escuela}" />
+                                            </f:facet>      
+                                            <f:facet name="input"> 
+                                                <p:inputText value="#{alum.escuela}" style="width:100%"/>                                 
+                                            </f:facet>      
+                                        </p:cellEditor>
+                                    </p:column>
+                                     <p:column headerText="Ciclo">
+                                        <p:cellEditor>       
+                                            <f:facet name="output"> 
+                                                <h:outputText value="#{alum.ciclo}" />
+                                            </f:facet>      
+                                            <f:facet name="input"> 
+                                                <p:inputText value="#{alum.ciclo}" style="width:100%"/>                                 
+                                            </f:facet>      
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column headerText="Opcion" width="50">  
+                                        <p:rowEditor />  
+                                    </p:column> 
+                                </p:dataTable>      
+                            </p:panel> 
+                        </h:form> 
+                         <h:form id="form_editaralumno2">                 
+                            <p:panel id="editar_alumno2" header="Edicion Alumno Forma 02 ">                 
+                                <p:dataTable id="alumnoTableactualiar2"   widgetVar="alumnoTableactualizar2" var="alum" value="#{bAlumno.cargarAlumnos}" paginator="true" rows="5" editable="true" emptyMessage="No Empresas encontradas" rowsPerPageTemplate="10,15,20">                                                          
+                                    <p:column headerText="Historial" width="50">  
+                                        <h:outputText value="#{alum.obj_hcl.cod_historiaclinica}" />
+                                    </p:column>
+                                    <p:column headerText="DNI" filterBy="#{alum.dni_paciente}"  filterMatchMode="contains" >  
+                                        <h:outputText value="#{alum.dni_paciente}" />
+                                    </p:column> 
+                                    <p:column headerText="Nombre" filterBy="#{alum.nombres}"  filterMatchMode="contains">  
+                                        <h:outputText value="#{alum.nombres}" />
+                                    </p:column>               
+                                    <p:column headerText="Apellidos" filterBy="#{alum.apellidos}"  filterMatchMode="contains" >  
+                                                      <h:outputText value="#{alum.apellidos}" />
+                                    </p:column>
+                                    <p:column  headerText="Codigo Universitario" >  
+                                        <h:outputText value="#{alum.codigo_univ}" />
+                                    </p:column>
+                                    <p:column  headerText="Escuela">  
+                                        <h:outputText value="#{alum.escuela}" />
+                                    </p:column>
+                                    <p:column  headerText="Ciclo" >  
+                                        <h:outputText value="#{alum.ciclo}" />
+                                    </p:column>    
+                                    <p:column style="width:4%" headerText="Opcion" >  
+                                        <p:commandButton id="selectButton2" update=":tabPaciente:form_actualizar2:actualizar_alumno" oncomplete="alumDialog2.show()" icon="ui-icon-pencil" title="Detalles">  
+                                            <f:setPropertyActionListener value="#{alum}" target="#{bAlumno.selectedAlumno}" />  
+                                        </p:commandButton>  
+                                    </p:column>                   
+                                 </p:dataTable>
+                            </p:panel>
+                        </h:form>
+                        <h:form id="form_actualizar2">                              
+                            <p:dialog header="Actualizando Alumno" widgetVar="alumDialog2" resizable="false" id="alumDlg2" showEffect="fade" hideEffect="explode" modal="false">    
+                                <p:panel id="actualizar_alumno"> 
+                                    <p:growl sticky="true"  showDetail="true"/>                  
+                                    <h:panelGrid columns="2" cellpadding="4" style="margin:0 auto;"> 
+                                        <h:outputText value="DNI:" />  
+                                        <p:inputText value="#{bAlumno.selectedAlumno.dni_paciente}" style="font-weight:bold"/> 
+                                        <h:outputText value="Nombre:" />  
+                                        <p:inputText value="#{bAlumno.selectedAlumno.nombres}" style="font-weight:bold"/>    
+                                        <h:outputText value="Apellidos:" />  
+                                        <p:inputText value="#{bAlumno.selectedAlumno.apellidos}" style="font-weight:bold"/>  
+                                        <h:outputText value="Codigo Universitario:" />  
+                                        <p:inputText value="#{bAlumno.selectedAlumno.codigo_univ}" style="font-weight:bold"/>  
+                                        <h:outputText value="Escuela:" />  
+                                        <p:inputText value="#{bAlumno.selectedAlumno.escuela}" style="font-weight:bold"/>  
+                                        <h:outputText value="Ciclo:" />  
+                                        <p:inputText value="#{bAlumno.selectedAlumno.ciclo}" style="font-weight:bold"/>  
+                                        <p:commandButton  value="Actualizar" id="updatePaciente" actionListener="#{bAlumno.doActualizarAlumno}" update="actualizar_alumno" />
+                                    </h:panelGrid>                      
+                               </p:panel>
+                            </p:dialog>                  
+                        </h:form>                
+                    </p:tab>
+                </p:tabView>   
+           </ui:define>
+       </ui:composition>         
+    </h:body>
+</html>
+

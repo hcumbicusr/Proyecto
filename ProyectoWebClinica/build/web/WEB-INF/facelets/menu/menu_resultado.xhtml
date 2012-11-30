@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+     <h:body>
+        <ui:composition> 
+            <h:form>
+            <p:growl id="menuodontologia"/>
+                <p:menubar>
+                    <p:menuitem value="Inicio" url="odontologia.jsf" icon="ui-icon-home" />
+                    <p:menuitem value="Paciente" url="#" />
+                    <p:menuitem value="Resultados" url="resultadodontologia.jsf" icon="ui-icon-contact"
+                                rendered="#{bUsuario.usuario_a.tipo_user eq 2 and bUsuario.usuario_a.cod_tipo_personal eq 3}"/>
+                    <p:menuitem value="Resultados" url="resultadomedicina.jsf" icon="ui-icon-contact"
+                                rendered="#{bUsuario.usuario_a.tipo_user eq 2 and bUsuario.usuario_a.cod_tipo_personal eq 1}"/>
+                    <p:menuitem value="Resultados" url="resultadopsicologia.jsf" icon="ui-icon-contact"
+                                rendered="#{bUsuario.usuario_a.tipo_user eq 2 and bUsuario.usuario_a.cod_tipo_personal eq 2}"/>
+                    <p:menuitem value="Resultados" url="resultadolaboratorio.jsf" icon="ui-icon-contact"
+                                rendered="#{bUsuario.usuario_a.tipo_user eq 2 and bUsuario.usuario_a.cod_tipo_personal eq 4}"/>
+                    <p:menuitem value="Editar" url="#" icon="ui-icon-pencil"/>
+                    <p:menuitem value="Listar Atenciones" url="#" icon="ui-icon-script" />
+                    <p:menuitem value="Salir" url="admision.jsf" icon="ui-icon-pencil"/>
+                </p:menubar>
+            </h:form>
+        </ui:composition>
+    </h:body>
+</html>
+

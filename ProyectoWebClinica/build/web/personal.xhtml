@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <head>
+       
+    </head>
+    
+    <body>
+        <ui:composition template="/WEB-INF/facelets/templates/TemplatePagina.xhtml">
+            <ui:define name="content">
+                <h:outputText value="Bienvenidos a Personal" styleClass="texto1"/>
+                <br/><br/><br/>
+                <p:tabView id="tabPersonal">
+                    <p:tab id="tab1" title="Registrar Personal">
+                        <p:fieldset legend="Datos del Personal" styleClass="field-izquierda">
+                            <h:form id="registrarpersonal">
+                                <p:panel id="nuevo_personal"> 
+                                    <p:growl  id="growl" sticky="true" showDetail="true"/>
+                                    <h:panelGrid columns="6">
+                                        <h:outputLabel for="dni_personal" value="(*)DNI"/>
+                                        <h:panelGroup>
+                                            <p:inputMask id="dni_personal" value="#{bPersonal.personal_a.dni_personal}" mask="99999999" title="Formato: 00000000" required="true" size="9"/>
+                                            <p:tooltip for="dni_personal" showEvent="focus" hideEvent="blur"/>
+                                            <p:message for="dni_personal" display="icon"/>
+                                        </h:panelGroup>
+                                        <h:outputLabel for="nom_personal" value="(*)NOMBRES"/>
+                                        <h:panelGroup>
+                                            <p:inputText value="#{bPersonal.personal_a.nombres}" id="nom_personal" required="true" title="Maximo 50 caracteres">
+                                                <f:validateLength minimum="2" maximum="50"/>
+                                            </p:inputText>
+                                            <p:tooltip for="nom_personal" showEvent="focus" hideEvent="blur"/>
+                                            <p:message for="nom_personal" display="icon"/>
+                                        </h:panelGroup>
+                                        <h:outputLabel for="ape_personal" value="(*)APELLIDOS"/>
+                                        <h:panelGroup>
+                                            <p:inputText value="#{bPersonal.personal_a.apellidos}" id="ape_personal" required="true" title="Maximo 50 caracteres">
+                                                <f:validateLength minimum="2" maximum="50"/>
+                                            </p:inputText>
+                                            <p:tooltip for="ape_personal" showEvent="focus" hideEvent="blur"/>
+                                            <p:message for="ape_personal" display="icon"/>
+                                        </h:panelGroup>
+                                        <h:outputLabel value="(*)NACIMIENTO"/>
+                                        <h:panelGroup>
+                                            <p:calendar effect="explode" value="#{bPersonal.personal_a.fecha_nacimiento}" required="true" navigator="true" pattern="dd/MM/yyyy"/>                           
+                                        </h:panelGroup>
+                                        <h:outputLabel for="sex_personal" value="(*)SEXO"/>
+                                        <h:panelGroup>
+                                            <p:selectOneMenu id="sex_personal" value="#{bPersonal.personal_a.sexo}" panelStyle="width:250px" effect="fade" style="width: 160px" required="true">
+                                                       <f:selectItem itemLabel="" itemValue=""/>
+                                                       <f:selectItem itemLabel="Masculino" itemValue="M" />
+                                                       <f:selectItem itemLabel="Femenino" itemValue="F" />
+                                                   </p:selectOneMenu>                     
+                                               </h:panelGroup>
+                                        <h:outputLabel value="(*)ESPECIALIDAD"/>
+                                               <h:panelGroup>
+                                                   <p:selectOneMenu id="tipo_personal" value="#{bPersonal.personal_a.obj_tpe.cod_tipo_personal}" panelStyle="width:250px" effect="fade" style="width: 160px" required="true">
+                                                       <f:selectItem itemLabel="" itemValue=""/>
+                                                       <f:selectItems value="#{bTipoPersonal.cargarComboTip}" var="variable" itemLabel="#{variable.nombre}" itemValue="#{variable.cod_tipo_personal}" />
+                                                   </p:selectOneMenu>                     
+                                               </h:panelGroup>
+                                        <h:outputLabel value="(*)TIPO ACCESO"/>
+                                               <h:panelGroup>
+                                                   <p:selectOneMenu id="acces_personal" value="#{bPersonal.personal_a.obj_use.num_user}" panelStyle="width:250px" effect="fade" style="width: 160px" required="true">
+                                                       <f:selectItem itemLabel="" itemValue=""/>
+                                                       <f:selectItems value="#{bTipo.cargarComboTipUser}" var="variable" itemLabel="#{variable.descripcion}" itemValue="#{variable.cod_tipo}" />
+                                                   </p:selectOneMenu>                     
+                                               </h:panelGroup>
+                                    </h:panelGrid>
+                                    <p:commandButton value="Registrar" id="savepersonal" actionListener="#{bPersonal.doRegistrarPersonal}" update="growl" style=" float: right" icon="ui-icon-disk" action="#{bPersonal.reinit()}"/>
+                                    <p:commandButton value="Limpiar" type="reset" icon="ui-icon-document"/>
+                                </p:panel>
+                            </h:form>
+                        </p:fieldset>
+                    </p:tab>
+                    <p:tab id="tab2" title="Listar Personal">
+                        <p:growl sticky="true" showDetail="true"/>
+                        <h:form id="form_listarpersonal">
+                            <p:panel id="listar_personal" header="Listando Personal">
+                                <p:dataTable id="personalTable" var="pers" value="#{ bPersonal.cargarPersonal}" emptyMessage="No se encontraron" paginator="true" rows="5" rowsPerPageTemplate="5,10,15,20">
+                                    <p:column filterBy="#{pers.cod_personal}" filterMatchMode="contains">
+                                        <f:facet name="header">
+                                            <h:outputText value="Codigo"/>
+                                        </f:facet>
+                                        <h:outputText value="#{pers.cod_personal}"/>
+                                    </p:column>
+                                    <!-- sortBy=para ordenar por nombre; filtered=filtra por nombre -->
+                                    <p:column filterBy="#{pers.dni_personal}" filterMatchMode="contains"> 
+                                        <f:facet name="header">
+                                            <h:outputText value="DNI"/>
+                                        </f:facet>
+                                        <h:outputText value="#{pers.dni_personal}"/>
+                                    </p:column>
+                                    <p:column> 
+                                        <f:facet name="header">
+                                            <h:outputText value="Nombres"/>
+                                        </f:facet>
+                                        <h:outputText value="#{pers.nombres}"/>
+                                    </p:column>
+                                    <p:column sortBy="#{pers.apellidos}" filterBy="#{pers.apellidos}" filterMatchMode="contains"> 
+                                        <f:facet name="header">
+                                            <h:outputText value="Apellidos"/>
+                                        </f:facet>
+                                        <h:outputText value="#{pers.apellidos}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Tipo Personal"/>
+                                        </f:facet>
+                                        <h:outputText value="#{pers.obj_tpe.nombre}"/>
+                                    </p:column>
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Usuario"/>
+                                        </f:facet>
+                                        <h:outputText value="#{pers.obj_use.nombre_usuario}"/>
+                                    </p:column>
+                                    <p:column exportable="false" style="width:4%" >  
+                                        <p:commandButton id="selectButton" update=":tabPersonal:form_listarpersonal:displayper" oncomplete="perDialog.show()" icon="ui-icon-search" title="Detalles">  
+                                            <f:setPropertyActionListener value="#{pers}" target="#{bPersonal.selectedPersonal}" />  
+                                        </p:commandButton>  
+                                     </p:column>
+                                </p:dataTable> 
+                                <p:dialog header="Detalles de Personal" widgetVar="perDialog" resizable="false" id="perDlg" showEffect="fade" hideEffect="explode" modal="false">
+                                        <h:panelGrid id="displayper" columns="2" cellpadding="4" style="margin:0 auto;">
+                                                <h:outputText value="Sexo:" />  
+                                                <h:outputText value="#{bPersonal.selectedPersonal.sexo}" style="font-weight:bold"/>                        
+                                                <h:outputText value="Fecha Nacimiento:" />  
+                                                <h:outputText value="#{bPersonal.selectedPersonal.fecha_nacimiento2}" style="font-weight:bold"/>  
+                                                <h:outputText value="Estado de Trabajo:" />  
+                                                <h:outputText value="#{bPersonal.selectedPersonal.estado}" style="font-weight:bold"/>    
+                                        </h:panelGrid>
+                               </p:dialog>
+                            </p:panel> 
+                        </h:form> 
+                    </p:tab> 
+                </p:tabView> 
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

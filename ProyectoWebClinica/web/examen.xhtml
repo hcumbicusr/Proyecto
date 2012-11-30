@@ -1,0 +1,199 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <h:head>
+        <title><h:outputText  value="#{msg.examen}" /></title>
+    </h:head>
+    <h:body>
+        <ui:composition template="/WEB-INF/facelets/templates/TemplatePagina.xhtml">
+            <ui:define name="content">
+                <h:outputText value="Bienvenidos a Examenes" styleClass="texto1"/>
+                <br/><br/><br/>
+                <p:tabView id="tabExamen">
+                    <p:tab id="tab1" title="Crear Examen">
+                        <h:form id="busq_examen">
+                           <h:panelGrid columns="4" styleClass="marg-panel" cellpadding="5">
+                                <h:outputLabel for="busqexa_alumno" value="Realizar Buqueda:"/>
+                                <p:inputMask  id="busqexa_alumno" value="#{bPaciente.parametro}" mask="99999999" required="true" size="20"/>
+                                <p:watermark for="busqexa_alumno" value="Buscar Paciente"/>
+                                <p:commandButton id="busca_alumno" update="resultadoTable2" style="float: right" icon="ui-icon-search"/>
+                           </h:panelGrid>
+                            <p:growl id="messages" showDetail="true" />
+                            <p:dataTable id="resultadoTable2" var="busq" value="#{bPaciente.buscarPaciente}" emptyMessage="">
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Nª Historia"/>
+                                        </f:facet>
+                                        <h:outputText value="#{busq.obj_hcl.cod_historiaclinica}"/>
+                                    </p:column>
+                                    <!-- sortBy=para ordenar por nombre; filtered=filtra por nombre -->
+                                    <p:column> 
+                                        <f:facet name="header">
+                                            <h:outputText value="Nombres"/>
+                                        </f:facet>
+                                        <h:outputText value="#{busq.nombres}"/>
+                                    </p:column>
+                                    <p:column> 
+                                        <f:facet name="header">
+                                            <h:outputText value="Apellidos"/>
+                                        </f:facet>
+                                        <h:outputText value="#{busq.apellidos}"/>
+                                    </p:column>
+                            </p:dataTable>
+                        
+                        <p:fieldset legend="Datos del Examen" styleClass="field-izquierda">
+                           <h:form id="registrarexamen">
+                                <p:panel id="nuevo_examen" style=" width: 500px">
+                                    <p:growl sticky="true" showDetail="true"/>
+                                    <h:panelGrid columns="8">
+                                        <h:outputText value="(*)DNI: "/>
+                                        <h:panelGroup>
+                                            <p:inputMask id="dni_paciente_e" value="#{bExamen.examen_a.obj_pac.dni_paciente}" mask="99999999" title="Formato: 00000000" required="true" size="9"/>
+                                            <p:tooltip for="dni_paciente_e" showEvent="focus" hideEvent="blur"/>
+                                            <p:message for="dni_paciente_e" display="icon"/>
+                                        </h:panelGroup>
+                                        <h:outputLabel for="cod_boleta" value="   Codigo Boleta"/>  
+                                        <p:selectOneMenu value= "#{bExamen.serie}" id="cod_boleta">  
+                                            <f:selectItem itemLabel="" itemValue=""/> 
+                                            <f:selectItem itemLabel="0001" itemValue="0001"/>  
+                                            <f:selectItem itemLabel="0004" itemValue="0004"/>   
+                                        </p:selectOneMenu>
+                                        <h:outputLabel value="-"/>
+                                        <h:panelGroup>
+                                            <p:inputMask id="bol_paciente" value="#{bExamen.numero}" mask="9999999" title="Formato: 0000000" required="true" size="7"/>
+                                            <p:tooltip for="bol_paciente" showEvent="focus" hideEvent="blur"/>
+                                            <p:message for="bol_paciente" display="icon"/>
+                                        </h:panelGroup>
+                                        <h:outputLabel for="mont_bol_paciente" value="(*)Monto Boleta"/>
+                                        <h:panelGroup>
+                                            <p:inputText id="mont_bol_paciente" value="#{bExamen.examen_a.obj_bol.monto}" title="Formato: 00000" required="true" size="9"/>
+                                            <p:tooltip for="mont_bol_paciente" showEvent="focus" hideEvent="blur"/>
+                                            <p:message for="mont_bol_paciente" display="icon"/>
+                                        </h:panelGroup>
+                                    </h:panelGrid>
+                                    <p:commandButton value="Crear" id="newexamen" actionListener="#{bExamen.doCrearExamen}" action="#{bExamen.reinit()}"
+                                                     update="nuevo_examen, :tabExamen:listar_boletas:listarboletas, :tabExamen:form_examenes:listar_examen" style="float: right" icon="ui-icon-folder-collapsed"/>
+                                </p:panel>
+                            </h:form>
+                        </p:fieldset>
+                         </h:form><br/><br/>
+                        <p:fieldset legend="Listado de Boletas" styleClass="field-izquierda">
+                            <h:form id="listar_boletas">
+                                <p:panel id="listarboletas" style=" width: 400px">
+                                    <p:dataTable id="boletaTable" var="bol" value="#{bBoleta.cargarPagos}" paginator="true" 
+                                                 rows="5" emptyMessage="No Se Encontraron Boletas"  rowsPerPageTemplate="10,15,20" >
+                                        <p:column headerText="Codigo" footerText="Codigo">
+                                            <h:outputText value="#{bol.cod_boleta}" />
+                                        </p:column>
+                                        <p:column headerText="Monto" footerText="Monto">
+                                            <h:outputText value="#{bol.monto}"/>
+                                        </p:column>
+                                        <p:column headerText="Fecha" footerText="Fecha">
+                                            <h:outputText value="#{bol.fecha}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:panel>
+                            </h:form>
+                        </p:fieldset>
+                    </p:tab>
+                    <p:tab id="tab2" title="Listar Examen por Fecha">
+                        <h:form id="form_busquedafecha">
+                        <h:panelGrid columns="7" styleClass="marg-panel" cellpadding="5">
+                           <h:outputLabel value="Realizar Buqueda:"/>
+                           <h:panelGroup>
+                               <p:calendar effect="explode" id="fec_examen" value="#{bExamen.parametro2}" required="true" navigator="true" pattern="dd/MM/yyyy"/>                           
+                           </h:panelGroup>
+                           <p:commandButton id="buscaexamenfecha" update="resultadoTablefecha" style="float: right" icon="ui-icon-search"/>
+                       </h:panelGrid>
+                            <p:growl id="messages" showDetail="true" />
+                            <p:dataTable id="resultadoTablefecha" var="busq" value="#{bExamen.buscarExamenFecha}" emptyMessage="No se encontraron Examenes" paginator="true" rows="5" rowsPerPageTemplate="5,10,15,20">
+                                <p:column headerText="Examen">
+                                    <h:outputText value="#{busq.cod_examen}"/>
+                                </p:column>
+                                <p:column headerText="Historia Clinica">
+                                    <h:outputText value="#{busq.obj_his.cod_historiaclinica}"/>
+                                </p:column>
+                                <p:column headerText="Estado">
+                                    <h:outputText value="#{busq.estado}"/>
+                                </p:column>
+                                <p:column headerText="Boleta">
+                                    <h:outputText value="#{busq.obj_bol.cod_boleta}"/>
+                                </p:column>
+                                <p:column headerText="Fecha">
+                                    <h:outputText value="#{busq.fecha}"/>
+                                </p:column>
+                                <p:column headerText="Nombres">
+                                    <h:outputText value="#{busq.obj_pac.nombres}"/>
+                                </p:column>
+                            </p:dataTable>
+                       </h:form>
+                    </p:tab>
+                    <p:tab id="tab3" title="Listar Examen por Paciente">
+                        <h:form id="form_busquedapaciente">
+                        <h:panelGrid columns="4" styleClass="marg-panel" cellpadding="5">
+                           <h:outputLabel value="Realizar Buqueda:"/>
+                           <p:inputMask value="#{bExamen.parametro}" mask="99999999" title="Formato: 00999900" size="10"/>                           
+                           <p:commandButton id="buscaexamenpaciente" update="resultadoTablepaciente" style="float: right" icon="ui-icon-search"/>
+                       </h:panelGrid>
+                            <p:growl id="messages" showDetail="true" />
+                            <p:dataTable id="resultadoTablepaciente" var="busq" value="#{bExamen.buscarExamenPaciente}" emptyMessage="No se encontraron Examenes"  rows="3">
+                                <p:column headerText="Examen">
+                                    <h:outputText value="#{busq.cod_examen}"/>
+                                </p:column>
+                                <p:column headerText="Historia Clinica">
+                                    <h:outputText value="#{busq.obj_his.cod_historiaclinica}"/>
+                                </p:column>
+                                <p:column headerText="DNI">
+                                    <h:outputText value="#{busq.obj_pac.dni_paciente}"/>
+                                </p:column>
+                                <p:column headerText="Nombres">
+                                    <h:outputText value="#{busq.obj_pac.nombres}"/>
+                                </p:column>
+                                <p:column headerText="Apellidos">
+                                    <h:outputText value="#{busq.obj_pac.apellidos}"/>
+                                </p:column>
+                                <p:column headerText="Fecha">
+                                    <h:outputText value="#{busq.fecha}"/>
+                                </p:column>
+                                <p:column headerText="Boleta">
+                                    <h:outputText value="#{busq.obj_bol.cod_boleta}"/>
+                                </p:column>
+                                <p:column headerText="Precio">
+                                    <h:outputText value="#{busq.obj_bol.monto}"/>
+                                </p:column>
+                                
+                            </p:dataTable>
+                       </h:form>
+                    </p:tab>
+                    <p:tab id="tab4" title="Listar Examenes Hoy">
+                        <p:growl sticky="true" showDetail="true"/>
+                        <h:form id="form_examenes">
+                            <p:panel id="listar_examen" header="Listando Examenes">
+                                <p:dataTable id="examenTable" var="exa" value="#{bExamen.listarExamenes}" emptyMessage="No se encontraron Examenes" paginator="true" rows="5" rowsPerPageTemplate="5,10,15,20">
+                                    <p:column headerText="Examen">
+                                        <h:outputText value="#{exa.cod_examen}"/>
+                                    </p:column>
+                                    <p:column headerText="Historia Clinica">
+                                        <h:outputText value="#{exa.obj_his.cod_historiaclinica}"/>
+                                    </p:column>
+                                    <p:column headerText="Nombres">
+                                        <h:outputText value="#{exa.obj_pac.nombres}"/>
+                                    </p:column>
+                                    <p:column headerText="Apellidos">
+                                        <h:outputText value="#{exa.obj_pac.apellidos}"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </p:panel>
+                        </h:form>
+                    </p:tab>
+                </p:tabView>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

@@ -1,0 +1,64 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    
+    <h:head>
+        
+    </h:head>
+    <h:body>
+        <ui:composition template="/WEB-INF/facelets/templates/TemplatePagina.xhtml">
+            <ui:define name="content">
+                <h:outputText value="Bienvenidos a Consultas" styleClass="texto1"/>
+                <br/><br/><br/>
+                <p:tabView id="tabPaciente">
+                    <p:tab id="tab1" title="Crear Consulta">
+                         <h:form id="busq_examen">
+                             <h:panelGrid columns="4" styleClass="marg-panel" cellpadding="5">
+                                <h:outputLabel for="busqexa_alumno" value="Realizar Buqueda:"/>
+                                <p:inputMask id="busqexa_alumno" value="#{bPaciente.parametro}" mask="99999999" required="true" size="20"/>
+                                <p:watermark for="busqexa_alumno" value="Buscar Paciente"/>
+                                <p:commandButton id="busca_alumno" update="resultadoTable2" icon="ui-icon-search"/>
+                           </h:panelGrid>
+                            <p:growl id="messages" showDetail="true" />
+                            <p:dataTable id="resultadoTable2" var="busq" value="#{bPaciente.buscarPaciente}" emptyMessage="">
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Nª Historia"/>
+                                        </f:facet>
+                                        <h:outputText value="#{busq.obj_hcl.cod_historiaclinica}"/>
+                                    </p:column>
+                                    <!-- sortBy=para ordenar por nombre; filtered=filtra por nombre -->
+                                    <p:column> 
+                                        <f:facet name="header">
+                                            <h:outputText value="Nombres"/>
+                                        </f:facet>
+                                        <h:outputText value="#{busq.nombres}"/>
+                                    </p:column>
+                                    <p:column> 
+                                        <f:facet name="header">
+                                            <h:outputText value="Apellidos"/>
+                                        </f:facet>
+                                        <h:outputText value="#{busq.apellidos}"/>
+                                    </p:column>
+                            </p:dataTable>
+                        </h:form><br/><br/>
+                        <p:fieldset legend="Datos del Examen" styleClass="field-izquierda">
+                            <h:form id="registrarexamen">
+                                <p:panel id="nuevo_examen" style=" width: 350px">
+                                    <p:growl sticky="true" showDetail="true"/>
+                                    
+                                    
+                                </p:panel>
+                            </h:form>
+                        </p:fieldset>
+                    </p:tab>
+                    <p:tab id="tab2" title="Listar Consulta">
+                        
+                    </p:tab>
+                </p:tabView>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

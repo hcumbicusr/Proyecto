@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <head>
+        
+    </head>
+    <body>
+        <ui:composition template="/WEB-INF/facelets/templates/TemplatePagina.xhtml">
+            <ui:define name="content">
+                <h:outputText value="Bienvenidos a Historiales Clinicos" styleClass="texto1"/>
+                <br/><br/><br/>
+                <p:growl sticky="true" showDetail="true"/>
+                <h:form id="form_listarhistoriales">
+                    <p:panel id="listar_historial" header="Listando Historiales">
+                        <p:dataTable id="historialTable" var="his" value="#{bPaciente.listarHistorias}" emptyMessage="No se encontraron" paginator="true" rows="5" rowsPerPageTemplate="5,10,15,20">
+                                    <p:column>
+                                        <f:facet name="header">
+                                            <h:outputText value="Nª Historia"/>
+                                        </f:facet>
+                                        <h:outputText value="#{his.obj_hcl.cod_historiaclinica}"/>
+                                    </p:column>
+                                    <p:column filterBy="" filterMatchMode="contains">
+                                        <f:facet name="header">
+                                            <h:outputText value="Fecha de Creacion"/>
+                                        </f:facet>
+                                        <h:outputText value="#{his.obj_hcl.fecha_emision2}"/>
+                                    </p:column>
+                                    <!-- sortBy=para ordenar por nombre; filtered=filtra por nombre -->
+                                    <p:column filterBy="" filterMatchMode="contains"> 
+                                        <f:facet name="header">
+                                            <h:outputText value="DNI Paciente"/>
+                                        </f:facet>
+                                        <h:outputText value="#{his.dni_paciente}"/>
+                                    </p:column>
+                                    <p:column> 
+                                        <f:facet name="header">
+                                            <h:outputText value="Nombres"/>
+                                        </f:facet>
+                                        <h:outputText value="#{his.nombres}"/>
+                                    </p:column>
+                                    <p:column sortBy="" filterBy="" filterMatchMode="contains"> 
+                                        <f:facet name="header">
+                                            <h:outputText value="Apellidos"/>
+                                        </f:facet>
+                                        <h:outputText value="#{his.apellidos}"/>
+                                    </p:column>
+                                    <p:column exportable="false" style="width:4%" >  
+                                        <p:commandButton id="selectButton" update=":form_listarhistoriales:displayhis" oncomplete="hisDialog.show()" icon="ui-icon-search" title="Detalles">  
+                                            <f:setPropertyActionListener value="#{his}" target="#{bPaciente.selectedPaciente}" />  
+                                        </p:commandButton>  
+                                    </p:column>
+                        </p:dataTable>
+                        <p:panel header="Exportar Todos los Datos">
+                                    <h:commandLink>
+                                        <p:graphicImage value="resources/imagenes/excel.png"/>
+                                        <p:dataExporter type="xls" target="historialTable" fileName="historiales" />
+                                    </h:commandLink>
+                                    <h:commandLink>
+                                        <p:graphicImage value="resources/imagenes/pdf.png"/>
+                                        <p:dataExporter type="pdf" target="historialTable" fileName="historiales"/>
+                                    </h:commandLink>
+                                </p:panel>
+                                <p:dialog header="Detalle de Histrial" widgetVar="hisDialog" resizable="false" id="hislDlg" showEffect="fade" hideEffect="explode" modal="false">
+                                    <h:panelGrid id="displayhis" columns="2" cellpadding="4" style="margin:0 auto;">
+                                        
+                                    </h:panelGrid>
+                                </p:dialog>
+                    </p:panel>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

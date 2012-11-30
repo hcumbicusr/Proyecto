@@ -1,0 +1,93 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" 
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title><h:outputText  value="#{msg.paciente}" /></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+            <h:outputStylesheet library="css" name="estilo.css"/>
+    </h:head>
+    <h:body>
+        
+        <ui:composition template="/WEB-INF/facelets/templates/TemplatePagina.xhtml">
+            <ui:define name="content">
+                <h:outputText value="#{msg.reporte1}"  styleClass="texto1"/> <br />
+                <p:panel rendered="#{bUsuario.usuario_a.tipo_user eq 1 or bUsuario.usuario_a.cod_tipo_personal eq 5}">
+                    <h:form id="form_reporte">
+                    <p:commandButton style="float: right" value="Volver a Menu Reportes" id="volver" action="reportes.jsf"/>
+                    <h:panelGrid columns="6" cellpadding="4"  cellspacing="4" style="text-align: center">
+                                <h:outputLabel  value="(*)Fecha Inicio" />
+                                <h:panelGroup>
+                                    <p:calendar effect="explode" value="#{bReportes.fech_ini}" required="true" navigator="true" pattern="dd/MM/yyyy"/>                                    
+                                </h:panelGroup>
+                                <!--h:outputLabel  value="{bReportes.fech_ini}" /-->
+                                <h:outputLabel  value="(*)Fecha Fin" />
+                                <h:panelGroup>
+                                    <p:calendar effect="explode" value="#{bReportes.fech_fin}" required="true"  navigator="true" pattern="dd/MM/yyyy"/>                                    
+                                </h:panelGroup>
+                                <p:commandButton   value="Buscar" id="search" update="form_reporte" onclick="listar_pagosfecha.show();"/>
+                                
+                    </h:panelGrid>
+                        
+                    <p:panel id="listar_pagosfecha" header="Listando El Reporte de los Ingresos"  
+                                visible="false" widgetVar="listar_pagosfecha"
+                                closable="true" toggleable="true">
+                        <p:dataTable var="bol" value="#{bReportes.buscarPagosFecha}" paginator="true" rows="4"                   
+                                             emptyMessage="No se encontraron Boletas" style="width: 700px" >
+                                    <p:column headerText="SERIE">    
+                                        <h:outputText value="#{bol.serie}" />
+                                    </p:column>
+                                    <p:column headerText="MONTO">    
+                                        <h:outputText value="#{bol.monto}" />
+                                    </p:column>
+                        </p:dataTable>
+                    </p:panel>
+                    <p:panel id="reportPie" header="Listando El Reporte de los Ingresos"  
+                                visible="true" widgetVar="reportPie"
+                                closable="true" toggleable="true">
+                        <h:panelGroup>
+                                    <p:pieChart id="sample" value="#{bReportes.createPieModelTotalIngresos()}" 
+                                        title="Monto de Boletas Por Serie" 
+                                        legendPosition="no" fill="true" showDataLabels="true"   
+                                        style="width:500px;height:300px;text-align: center" sliceMargin="5" diameter="200" 
+                                        widgetVar="pie"/>
+                                    <p:commandButton type="button" value="#{msg.exptorta}" icon="ui-icon-extlink" onclick="exportPie()" />
+                                    <p:dialog widgetVar="dlg2" showEffect="fade"  header="#{msg.gimgtorta}">  
+                                        <p:outputPanel id="outputpie" layout="block" style="width:600px;height:300px"/>  
+                                    </p:dialog>
+                        </h:panelGroup>
+                    </p:panel>
+                    <p:panel id="reportBar" header="Listando El Reporte de los Ingresos"  
+                                visible="true" widgetVar="reportBar"
+                                closable="true" toggleable="true">
+                        <h:panelGroup>
+                                    <p:barChart id="basic" value="#{bReportes.createBarModelTotalIngresos()}" legendPosition="ne"  
+                                        orientation="vertical" title="Comparacion entre Series de Boletas" min="0" max="1000" style="width:600px;text-align: center" 
+                                        animate="true" zoom="true" widgetVar="barraec1" />  
+                                    <p:commandButton type="button" value="#{msg.expbarra}" icon="ui-icon-extlink" onclick="exportChart()"/> 
+                                    <p:dialog widgetVar="dlg" showEffect="fade"  header="#{msg.gimgbarra}">  
+                                        <p:outputPanel id="output" layout="block" style="width:600px;height:300px"/>  
+                                    </p:dialog>
+                        </h:panelGroup>
+                    </p:panel>
+                     <SCRIPT LANGUAGE="JavaScript"> 
+                        function exportChart(){  
+                        $('#output').empty().append(barraec1.exportAsImage());  
+                        dlg.show();  
+                        }
+                        function exportPie(){  
+                        $('#outputpie').empty().append(pie.exportAsImage());  
+                        dlg2.show();  
+                        }
+                    </SCRIPT>
+                </h:form>
+                    
+                </p:panel>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+
